@@ -4,31 +4,30 @@ import Meaning from "./Meaning";
 import "./Results.css";
 
 export default function Results(props) {
-  if (props.results) {
-    return (
-      <div className="Results">
-        <section>
-          <h2>{props.results.word}</h2>
+  const { results } = props;
+
+  if (!results) return null;
+
+  return (
+    <div className="Results">
+      <section>
+        <h2>{results.word}</h2>
+        {(results.phonetics?.length > 0 || results.audio) && (
           <Phonetic
             phonetic={{
-              text: Array.isArray(props.results.phonetics)
-                ? props.results.phonetics[0]
-                : "",
-              audio: props.results.audio || "",
+              text: results.phonetics?.[0] || "",
+              audio: results.audio || "",
             }}
           />
-        </section>
+        )}
+      </section>
 
-        {props.results.meanings.map(function (meaning, index) {
-          return (
-            <section key={index}>
-              <Meaning meaning={meaning} />
-            </section>
-          );
-        })}
-      </div>
-    );
-  } else {
-    return null;
-  }
+      {Array.isArray(results.meanings) &&
+        results.meanings.map((meaning, index) => (
+          <section key={index}>
+            <Meaning meaning={meaning} />
+          </section>
+        ))}
+    </div>
+  );
 }

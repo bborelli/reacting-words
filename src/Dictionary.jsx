@@ -11,6 +11,12 @@ export default function Dictionary(props) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(null);
 
+  const shecodesApiKey = "4fbe9b2c44d0f8a0833d1te403cbb78o";
+  const shecodesApiUrl = `https://api.shecodes.io/dictionary/v1/define`;
+  const pexelsApiKey =
+    "563492ad6f91700001000001fdd29f0808df42bd90c33f42e128fa89";
+  const pexelsApiUrl = `https://api.pexels.com/v1/search`;
+
   function handleDictionResponse(response) {
     setResults(response.data);
   }
@@ -20,28 +26,35 @@ export default function Dictionary(props) {
   }
 
   function search() {
+    if (keyword.trim() === "") return;
+
     setResults(null);
     setPhotos(null);
     setError(null);
 
-    let shecodesApiKey = "4fbe9b2c44d0f8a0833d1te403cbb78o";
-    let shecodesApiUrl = `https://api.shecodes.io/dictionary/v1/define?word=${keyword}&key=${shecodesApiKey}`;
-
     axios
-      .get(shecodesApiUrl)
+      .get(shecodesApiUrl, {
+        params: {
+          word: keyword,
+          key: shecodesApiKey,
+        },
+      })
       .then(handleDictionResponse)
       .catch((error) => {
         console.error("Dictionary API error:", error);
         setError("Sorry, we couldn't find that word.");
       });
 
-    let pexelsApiKey =
-      "563492ad6f91700001000001fdd29f0808df42bd90c33f42e128fa89";
-    let pexelsApiUrl = `https://api.pexels.com/v1/search?query=${keyword}&per_page=9`;
-    let headers = { Authorization: `${pexelsApiKey}` };
-
     axios
-      .get(pexelsApiUrl, { headers })
+      .get(pexelsApiUrl, {
+        params: {
+          query: keyword,
+          per_page: 9,
+        },
+        headers: {
+          Authorization: pexelsApiKey,
+        },
+      })
       .then(handlePexelsResponse)
       .catch((error) => {
         console.error("Pexels API error:", error);
@@ -82,11 +95,19 @@ export default function Dictionary(props) {
         </div>
       </section>
 
-      {error ? (
+      {error && (
         <section className="error-message">
           <p>{error}</p>
         </section>
-      ) : (
+      )}
+
+      {!results && !error && (
+        <section>
+          <p className="hint">Start by typing a word above 👆</p>
+        </section>
+      )}
+
+      {results && !error && (
         <>
           <Results results={results} />
           <Photos photos={photos} />

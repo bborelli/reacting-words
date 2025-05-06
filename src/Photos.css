@@ -1,4 +1,33 @@
+.Photos {
+  margin: 20px 0;
+}
+
+.Photos .row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.Photos .col-4 {
+  flex: 1 1 calc(33.333% - 10px);
+  max-width: calc(33.333% - 10px);
+}
+
 .Photos img {
-  border-radius: 4px;
-  margin-bottom: 20px;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  transition: transform 0.2s ease;
+  display: block;
+}
+
+.Photos img:hover {
+  transform: scale(1.02);
+}
+
+@media (max-width: 768px) {
+  .Photos .col-4 {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
 }

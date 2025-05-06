@@ -9,8 +9,13 @@ export default function Phonetic(props) {
   return (
     <div className="Phonetic">
       {audio && (
-        <a href={audio} target="_blank" rel="noreferrer">
-          Listen
+        <a
+          href={audio}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Listen to pronunciation"
+        >
+          🔉 Listen
         </a>
       )}
       {text && <span className="text">{text}</span>}
